@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jennifer Ngo Tran - Personal Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0D0D0D;
+            --text-color: #E5E5E5;
+            --text-secondary: #999999;
+            --text-tertiary: #888888;
+            --text-quaternary: #666666;
+            --accent-color: #FFD700;
+            --error-color: #FF6B6B;
+            --divider-color: rgba(255, 255, 255, 0.1);
+            --caret-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body.light-mode {
+            --bg-color: #FFFFFF;
+            --text-color: #1A1A1A;
+            --text-secondary: #666666;
+            --text-tertiary: #555555;
+            --text-quaternary: #444444;
+            --accent-color: #D4AF37;
+            --error-color: #CC0000;
+            --divider-color: rgba(0, 0, 0, 0.1);
+            --caret-bg: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Shake animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+
+        .shake {
+            animation: shake 0.3s;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0;
+            padding: 50px 80px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .name {
+            font-size: 32px;
+            color: var(--accent-color);
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* Experience Section */
+        .experience-list {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .experience-item {
+            margin-bottom: 3px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .experience-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--text-color);
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: var(--divider-color);
+            margin: 15px 0;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            font-weight: 400;
+            text-transform: lowercase;
+        }
+
+        .typing-box {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            outline: none;
+        }
+
+        .typing-text {
+            font-size: 15px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .char {
+            display: inline;
+            transition: color 0.2s;
+        }
+
+        .char.correct {
+            color: var(--text-color);
+        }
+
+        .char.underline {
+            text-decoration: underline;
+        }
+
+        .char.highlight {
+            color: var(--accent-color);
+        }
+
+        .char.correct.highlight,
+        .char.pending.highlight {
+            color: var(--accent-color);
+        }
+
+        .char.incorrect {
+            color: var(--error-color);
+        }
+
+        .char.current {
+            color: var(--text-color);
+            border-left: 2px solid var(--accent-color);
+            background-color: var(--caret-bg);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-left-color: var(--accent-color); }
+            51%, 100% { border-left-color: transparent; }
+        }
+
+        .char.pending {
+            color: var(--text-secondary);
+        }
+
+        .typing-text.started .char.pending {
+            color: var(--text-quaternary);
+        }
+
+        /* WPM Display */
+        .wpm-display {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .wpm-display.hidden {
+            display: none;
+        }
+
+        .wpm-value {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .wpm-value.real-time {
+            color: var(--accent-color);
+        }
+
+        /* Contact Section */
+        .contact-links {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .contact-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-link:hover {
+            color: var(--text-color);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 20px;
+            font-size: 12px;
+            color: var(--text-quaternary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid var(--divider-color);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-color);
+            border-color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            .name {
+                font-size: 24px;
+            }
+
+            .typing-text {
+                font-size: 14px;
+            }
+
+            .theme-toggle {
+                top: 15px;
+                right: 15px;
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">light</button>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="name">Jennifer Ngo Tran</div>
+            <div class="subtitle">3A Math student @ University of Waterloo</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- About Section -->
+        <section class="section">
+            <div class="section-title">about (start typing!)</div>
+            <div class="typing-box" id="typingBox" tabindex="0">
+                <div class="typing-text" id="typingText"></div>
+                <span class="wpm-display hidden" id="wpmDisplay">
+                    <span class="wpm-value" id="wpmValue">0</span> wpm
+                </span>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Experience Section -->
+        <section class="section">
+            <div class="section-title">experience</div>
+            <div class="experience-list">
+                <div class="experience-item">Finance Data Analyst - Hootsuite (F2025)</div>
+                <div class="experience-item">Growth and Product Intern - 1851 Labs (W2025)</div>
+                <div class="experience-item">Research Assistant - Toronto Metropolitan University (S2025)</div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Projects Section -->
+        <section class="section">
+            <div class="section-title">projects</div>
+            <div class="experience-list">
+                <div class="experience-item">NVIDIA Valuation & M&A Analysis Tool | Python, Financial Modeling, yfinance, Matplotlib</div>
+                <div class="experience-item">F1 Team Budget Cap & Performance ROI Analysis | Python, SQL</div>
+                <div class="experience-item">League of Legends Win Predictor | Python</div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Contact Section -->
+        <section class="section">
+            <div class="section-title">contact</div>
+            <div class="contact-links">
+                <a href="#" class="contact-link">[linkedin]</a> 
+                <a href="#" class="contact-link">[resume]</a> 
+                <a href="#" class="contact-link">[email]</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="footer">
+            © 2025 | Jennifer Ngo Tran
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.classList.add('light-mode');
+            themeToggle.textContent = 'dark';
+        } else {
+            themeToggle.textContent = 'light';
+        }
+
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = 'dark';
+            } else {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = 'light';
+            }
+        });
+
+        const targetText = "Hi! I'm Jennifer Ngo Tran, a 3A Math student majoring in C&O at the University of Waterloo.\nI previously worked at Hootsuite as a financial data analyst. Outside of work,\nI'm interested in eSports and any kind of visual media.\nI'd love to chat, feel free to contact me at any time.";
+        
+        const typingBox = document.getElementById('typingBox');
+        const typingText = document.getElementById('typingText');
+        const wpmDisplay = document.getElementById('wpmDisplay');
+        const wpmValue = document.getElementById('wpmValue');
+        const container = document.querySelector('.container');
+
+        let currentIndex = 0;
+        let startTime = null;
+        let lastUpdateTime = null;
+        let typedChars = 0;
+        let isCompleted = false;
+
+        // Initialize the text display
+        function initializeText() {
+            typingText.innerHTML = '';
+            const hootsuiteStart = targetText.indexOf('Hootsuite');
+            const hootsuiteEnd = hootsuiteStart + 'Hootsuite'.length;
+            
+            targetText.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.className = 'char pending';
+                if (index >= hootsuiteStart && index < hootsuiteEnd) {
+                    span.classList.add('highlight');
+                }
+                span.textContent = char === ' ' ? '\u00A0' : char;
+                typingText.appendChild(span);
+            });
+            updateCurrentChar();
+        }
+
+        // Update current character highlighting
+        function updateCurrentChar() {
+            const chars = typingText.querySelectorAll('.char');
+            chars.forEach((char, index) => {
+                char.classList.remove('current');
+                if (index === currentIndex) {
+                    char.classList.add('current');
+                }
+            });
+        }
+
+        // Calculate WPM
+        function calculateWPM() {
+            if (!startTime) return 0;
+            const now = Date.now();
+            const timeElapsed = (now - startTime) / 1000 / 60; // minutes
+            if (timeElapsed === 0) return 0;
+            const wordsTyped = typedChars / 5; // standard: 5 characters = 1 word
+            return Math.round(wordsTyped / timeElapsed);
+        }
+
+        // Update WPM display
+        function updateWPM() {
+            if (startTime && !isCompleted) {
+                const wpm = calculateWPM();
+                wpmValue.textContent = wpm;
+                wpmValue.classList.add('real-time');
+                wpmDisplay.classList.remove('hidden');
+            }
+        }
+
+        // Shake animation
+        function shakeScreen() {
+            container.classList.add('shake');
+            setTimeout(() => {
+                container.classList.remove('shake');
+            }, 500);
+        }
+
+        // Reset typing test
+        function resetTyping() {
+            currentIndex = 0;
+            startTime = null;
+            lastUpdateTime = null;
+            typedChars = 0;
+            isCompleted = false;
+            typingText.classList.remove('started');
+            initializeText();
+            wpmDisplay.classList.add('hidden');
+            wpmValue.textContent = '0';
+            wpmValue.classList.remove('real-time');
+        }
+
+        // Handle key press
+        function handleKeyPress(event) {
+            // Ignore modifier keys and special keys
+            if (event.key === 'Shift' || event.key === 'Control' || event.key === 'Alt' || 
+                event.key === 'Meta' || event.key === 'Tab' || event.key === 'Escape') {
+                return;
+            }
+
+            // Prevent default for most keys
+            if (event.key.length === 1 || event.key === 'Backspace' || event.key === 'Enter') {
+                event.preventDefault();
+            }
+
+            // Start timer on first character
+            if (!startTime && currentIndex === 0 && event.key.length === 1) {
+                startTime = Date.now();
+                lastUpdateTime = Date.now();
+                wpmDisplay.classList.remove('hidden');
+                typingText.classList.add('started');
+            }
+
+            if (isCompleted) {
+                return;
+            }
+
+            const expectedChar = targetText[currentIndex];
+
+            if (event.key === 'Backspace') {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    const chars = typingText.querySelectorAll('.char');
+                    const hootsuiteStart = targetText.indexOf('Hootsuite');
+                    const hootsuiteEnd = hootsuiteStart + 'Hootsuite'.length;
+                    chars[currentIndex].classList.remove('correct', 'incorrect');
+                    chars[currentIndex].classList.add('pending');
+                    // Preserve highlight for Hootsuite
+                    if (currentIndex >= hootsuiteStart && currentIndex < hootsuiteEnd) {
+                        chars[currentIndex].classList.add('highlight');
+                    }
+                    updateCurrentChar();
+                }
+                return;
+            }
+
+            // Check if character matches
+            if (event.key === expectedChar || 
+                (event.key === 'Enter' && expectedChar === '\n') ||
+                (event.key === ' ' && expectedChar === ' ')) {
+                // Correct character
+                const chars = typingText.querySelectorAll('.char');
+                const hootsuiteStart = targetText.indexOf('Hootsuite');
+                const hootsuiteEnd = hootsuiteStart + 'Hootsuite'.length;
+                chars[currentIndex].classList.remove('pending', 'incorrect');
+                chars[currentIndex].classList.add('correct');
+                // Preserve highlight for Hootsuite
+                if (currentIndex >= hootsuiteStart && currentIndex < hootsuiteEnd) {
+                    chars[currentIndex].classList.add('highlight');
+                }
+                currentIndex++;
+                typedChars++;
+
+                // Check if completed
+                if (currentIndex >= targetText.length) {
+                    isCompleted = true;
+                    const finalWPM = calculateWPM();
+                    wpmValue.textContent = finalWPM;
+                    wpmValue.classList.add('real-time');
+                    // Remove current indicator
+                    const chars = typingText.querySelectorAll('.char');
+                    chars[chars.length - 1].classList.remove('current');
+                } else {
+                    updateCurrentChar();
+                }
+            } else if (event.key.length === 1) {
+                // Incorrect character
+                const chars = typingText.querySelectorAll('.char');
+                chars[currentIndex].classList.add('incorrect');
+                shakeScreen();
+                setTimeout(() => {
+                    resetTyping();
+                }, 500);
+            }
+        }
+
+        // Real-time WPM updates
+        setInterval(() => {
+            if (startTime && !isCompleted) {
+                updateWPM();
+            }
+        }, 100);
+
+        // Focus on typing box when clicking anywhere on the page
+        document.addEventListener('click', (e) => {
+            if (!typingBox.contains(e.target)) {
+                typingBox.focus();
+            }
+        });
+
+        // Handle keyboard input
+        typingBox.addEventListener('keydown', handleKeyPress);
+
+        // Initialize on load
+        initializeText();
+        typingBox.focus();
+    </script>
+</body>
+</html>
