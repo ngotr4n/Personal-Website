@@ -446,7 +446,7 @@
             container.classList.add('shake');
             setTimeout(() => {
                 container.classList.remove('shake');
-            }, 500);
+            }, 300);
         }
 
         // Reset typing test
@@ -480,8 +480,8 @@
             if (!startTime && currentIndex === 0 && event.key.length === 1) {
                 startTime = Date.now();
                 lastUpdateTime = Date.now();
-                wpmDisplay.classList.remove('hidden');
                 typingText.classList.add('started');
+                wpmDisplay.classList.remove('hidden');
             }
 
             if (isCompleted) {
@@ -530,6 +530,7 @@
                     const finalWPM = calculateWPM();
                     wpmValue.textContent = finalWPM;
                     wpmValue.classList.add('real-time');
+                    wpmDisplay.classList.remove('hidden');
                     // Remove current indicator
                     const chars = typingText.querySelectorAll('.char');
                     chars[chars.length - 1].classList.remove('current');
@@ -537,13 +538,29 @@
                     updateCurrentChar();
                 }
             } else if (event.key.length === 1) {
-                // Incorrect character
+                // Incorrect character - mark as incorrect and shake, but allow continuing
                 const chars = typingText.querySelectorAll('.char');
+                chars[currentIndex].classList.remove('pending', 'correct');
                 chars[currentIndex].classList.add('incorrect');
                 shakeScreen();
-                setTimeout(() => {
-                    resetTyping();
-                }, 500);
+                // Allow them to continue typing - don't reset
+                currentIndex++;
+                
+                // Check if completed even with errors
+                if (currentIndex >= targetText.length) {
+                    isCompleted = true;
+                    const finalWPM = calculateWPM();
+                    wpmValue.textContent = finalWPM;
+                    wpmValue.classList.add('real-time');
+                    wpmDisplay.classList.remove('hidden');
+                    // Remove current indicator
+                    const chars = typingText.querySelectorAll('.char');
+                    if (chars.length > 0) {
+                        chars[chars.length - 1].classList.remove('current');
+                    }
+                } else {
+                    updateCurrentChar();
+                }
             }
         }
 
