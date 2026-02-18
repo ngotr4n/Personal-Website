@@ -78,21 +78,21 @@
         }
 
         .name {
-            font-size: 32px;
+            font-size: 31px;
             color: var(--accent-color);
             font-weight: 400;
             margin-bottom: 6px;
         }
 
         .subtitle {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-secondary);
             margin-bottom: 12px;
         }
 
         /* Experience Section */
         .experience-list {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
             line-height: 1.6;
         }
@@ -123,7 +123,7 @@
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-color);
             margin-bottom: 12px;
             font-weight: 400;
@@ -138,7 +138,7 @@
         }
 
         .typing-text {
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.7;
             white-space: pre-wrap;
             word-break: normal;
@@ -146,6 +146,20 @@
             hyphens: none;
             font-weight: 400;
             color: var(--text-secondary);
+        }
+
+        .typing-text a {
+            color: var(--accent-color);
+            text-decoration: none;
+            pointer-events: auto;
+        }
+
+        .typing-text a:hover {
+            text-decoration: underline;
+        }
+
+        .typing-text a .char {
+            color: var(--accent-color);
         }
 
         .char {
@@ -205,7 +219,7 @@
         }
 
         .wpm-value {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 400;
             color: var(--text-secondary);
         }
@@ -216,7 +230,7 @@
 
         /* Contact Section */
         .contact-links {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-secondary);
             line-height: 1.8;
         }
@@ -235,7 +249,7 @@
         .footer {
             margin-top: auto;
             padding-top: 20px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-quaternary);
         }
 
@@ -267,11 +281,11 @@
             }
 
             .name {
-                font-size: 24px;
+                font-size: 23px;
             }
 
             .typing-text {
-                font-size: 14px;
+                font-size: 13px;
             }
 
             .theme-toggle {
@@ -380,7 +394,7 @@
             }
         });
 
-        const targetText = "Hi! I'm Jennifer Ngo Tran, a 3A Math student majoring in Combinatorics and Optimization at the University of Waterloo.\nI previously worked at Hootsuite as a financial data analyst. Outside of work,\nI'm interested in eSports and documenting my baking experiences!\nI'd love to chat, feel free to contact me at any time.";
+        const targetText = "Hi! I'm Jennifer Ngo Tran, a 3A Math student majoring in Combinatorics and Optimization at the University of Waterloo.\nI previously worked at Hootsuite as a financial data analyst. Outside of work,\nI'm interested in eSports and documenting my baking adventures!\nI'd love to chat, feel free to contact me at any time.";
         
         const typingBox = document.getElementById('typingBox');
         const typingText = document.getElementById('typingText');
@@ -399,15 +413,45 @@
             typingText.innerHTML = '';
             const hootsuiteStart = targetText.indexOf('Hootsuite');
             const hootsuiteEnd = hootsuiteStart + 'Hootsuite'.length;
+            const bakingAdventuresStart = targetText.indexOf('baking adventures');
+            const bakingAdventuresEnd = bakingAdventuresStart + 'baking adventures'.length;
+            
+            let linkStartSpan = null;
             
             targetText.split('').forEach((char, index) => {
                 const span = document.createElement('span');
                 span.className = 'char pending';
-                if (index >= hootsuiteStart && index < hootsuiteEnd) {
+                
+                // Check if we're starting the "baking adventures" link
+                if (index === bakingAdventuresStart) {
+                    const link = document.createElement('a');
+                    link.href = 'https://maison-fer-production.up.railway.app';
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.style.textDecoration = 'none';
+                    link.style.color = 'inherit';
+                    
                     span.classList.add('highlight');
+                    link.appendChild(span);
+                    typingText.appendChild(link);
+                    linkStartSpan = span;
+                } else if (index > bakingAdventuresStart && index < bakingAdventuresEnd) {
+                    // Continue adding to the link
+                    span.classList.add('highlight');
+                    if (linkStartSpan && linkStartSpan.parentElement) {
+                        linkStartSpan.parentElement.appendChild(span);
+                    } else {
+                        typingText.appendChild(span);
+                    }
+                } else {
+                    // Regular character
+                    if (index >= hootsuiteStart && index < hootsuiteEnd) {
+                        span.classList.add('highlight');
+                    }
+                    typingText.appendChild(span);
                 }
+                
                 span.textContent = char === ' ' ? '\u00A0' : char;
-                typingText.appendChild(span);
             });
             updateCurrentChar();
         }
