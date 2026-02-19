@@ -44,8 +44,8 @@
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
-            overflow-y: hidden;
-            height: 100vh;
+            overflow-y: auto;
+            min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -66,7 +66,7 @@
             max-width: 800px;
             margin: 0;
             padding: 40px 70px;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -108,6 +108,129 @@
             position: absolute;
             left: 0;
             color: var(--text-color);
+        }
+
+        /* Dropdown for Resume.compile() */
+        .project-item {
+            margin-bottom: 2px;
+            position: relative;
+            padding-left: 15px;
+            padding-right: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .project-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--text-color);
+        }
+
+        .project-item::after {
+            content: "▼";
+            position: absolute;
+            right: 0;
+            top: 0.1em;
+            font-size: 10px;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease, color 0.2s;
+            line-height: 1;
+        }
+
+        .project-item:hover {
+            color: var(--text-color);
+        }
+
+        .project-item:hover::after {
+            color: var(--text-color);
+        }
+
+        .project-item.dropdown-active {
+            color: var(--accent-color);
+        }
+
+        .project-item.dropdown-active::after {
+            color: var(--accent-color);
+            transform: rotate(180deg);
+        }
+
+        .project-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 8px;
+            margin-left: 15px;
+            margin-bottom: 12px;
+        }
+
+        .project-dropdown.open {
+            max-height: 1000px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        .dropdown-content {
+            padding: 12px 0;
+        }
+
+        .dropdown-video {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .dropdown-video video {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            background-color: var(--bg-color);
+        }
+
+        .dropdown-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 12px;
+        }
+
+        .dropdown-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            background-color: var(--divider-color);
+            object-fit: contain;
+            transition: transform 0.2s;
+            max-width: 100%;
+            min-height: 280px;
+        }
+
+        /* For 3-image gallery (EchoCards), center the third image */
+        #echocards-content .dropdown-images {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #echocards-content .dropdown-images .dropdown-image:nth-child(3) {
+            grid-column: 1 / -1;
+            max-width: 50%;
+            justify-self: center;
+        }
+
+        @media (min-width: 900px) {
+            .dropdown-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dropdown-image {
+                min-height: 350px;
+            }
+        }
+
+
+        .dropdown-image:hover {
+            transform: scale(1.03);
         }
 
         .divider {
@@ -294,6 +417,19 @@
                 padding: 6px 10px;
                 font-size: 11px;
             }
+
+            .dropdown-images {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .project-item {
+                padding-right: 18px;
+            }
+
+            .project-item::after {
+                font-size: 9px;
+            }
         }
 
         /* Smooth scrolling */
@@ -342,8 +478,31 @@
         <section class="section">
             <div class="section-title">projects</div>
             <div class="experience-list">
-                <div class="experience-item">Resume.compile() | Next.js, React, TypeScript, Tailwind CSS, LaTeX, Google Gemini API, Zod</div>
-                <div class="experience-item">EchoCards | Next.js, React, TypeScript, Tailwind CSS, LaTeX, Google Gemini API, Zod</div>
+                <div class="project-item" id="resume-compile-dropdown">
+                    Resume.compile() | Next.js, React, TypeScript, Tailwind CSS, LaTeX, Google Gemini API, Zod
+                    <div class="project-dropdown" id="resume-compile-content">
+                        <div class="dropdown-content">
+                            <div class="dropdown-images">
+                                <img src="resume-compile-1.jpg" alt="Resume.compile() screenshot 1" class="dropdown-image">
+                                <img src="resume-compile-2.jpg" alt="Resume.compile() screenshot 2" class="dropdown-image">
+                                <img src="resume-compile-3.jpg" alt="Resume.compile() screenshot 3" class="dropdown-image">
+                                <img src="resume-compile-4.jpg" alt="Resume.compile() screenshot 4" class="dropdown-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-item" id="echocards-dropdown">
+                    EchoCards | Next.js, React, TypeScript, Tailwind CSS, LaTeX, Google Gemini API, Zod
+                    <div class="project-dropdown" id="echocards-content">
+                        <div class="dropdown-content">
+                            <div class="dropdown-images">
+                                <img src="echocards-1.jpg" alt="EchoCards screenshot 1" class="dropdown-image">
+                                <img src="echocards-2.jpg" alt="EchoCards screenshot 2" class="dropdown-image">
+                                <img src="echocards-3.jpg" alt="EchoCards screenshot 3" class="dropdown-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="experience-item">NVIDIA Valuation & M&A Analysis Tool | Python, Financial Modeling, yfinance, Matplotlib</div>
                 <div class="experience-item">F1 Team Budget Cap & Performance ROI Analysis | Python, SQL</div>
                 <div class="experience-item">League of Legends Win Predictor | Python</div>
@@ -617,9 +776,13 @@
             }
         }, 100);
 
-        // Focus on typing box when clicking anywhere on the page
+        // Focus on typing box when clicking anywhere on the page (but not on dropdowns)
         document.addEventListener('click', (e) => {
-            if (!typingBox.contains(e.target)) {
+            const resumeDropdown = document.getElementById('resume-compile-dropdown');
+            const echocardsDropdown = document.getElementById('echocards-dropdown');
+            if (!typingBox.contains(e.target) && 
+                !(resumeDropdown && resumeDropdown.contains(e.target)) &&
+                !(echocardsDropdown && echocardsDropdown.contains(e.target))) {
                 typingBox.focus();
             }
         });
@@ -630,6 +793,64 @@
         // Initialize on load
         initializeText();
         typingBox.focus();
+
+        // Dropdown functionality for Resume.compile()
+        const resumeCompileDropdown = document.getElementById('resume-compile-dropdown');
+        const resumeCompileContent = document.getElementById('resume-compile-content');
+
+        if (resumeCompileDropdown && resumeCompileContent) {
+            resumeCompileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = resumeCompileContent.classList.contains('open');
+                
+                if (isOpen) {
+                    resumeCompileContent.classList.remove('open');
+                    resumeCompileDropdown.classList.remove('dropdown-active');
+                } else {
+                    resumeCompileContent.classList.add('open');
+                    resumeCompileDropdown.classList.add('dropdown-active');
+                }
+            });
+        }
+
+        // Dropdown functionality for EchoCards
+        const echocardsDropdown = document.getElementById('echocards-dropdown');
+        const echocardsContent = document.getElementById('echocards-content');
+
+        if (echocardsDropdown && echocardsContent) {
+            echocardsDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = echocardsContent.classList.contains('open');
+                
+                if (isOpen) {
+                    echocardsContent.classList.remove('open');
+                    echocardsDropdown.classList.remove('dropdown-active');
+                } else {
+                    echocardsContent.classList.add('open');
+                    echocardsDropdown.classList.add('dropdown-active');
+                }
+            });
+        }
+
+        // Close dropdowns when clicking outside (but allow typing box clicks)
+        document.addEventListener('click', function(e) {
+            const resumeDropdown = document.getElementById('resume-compile-dropdown');
+            const echocardsDropdown = document.getElementById('echocards-dropdown');
+            
+            if (resumeDropdown && resumeCompileContent && 
+                !resumeDropdown.contains(e.target) && 
+                !typingBox.contains(e.target)) {
+                resumeCompileContent.classList.remove('open');
+                resumeDropdown.classList.remove('dropdown-active');
+            }
+            
+            if (echocardsDropdown && echocardsContent && 
+                !echocardsDropdown.contains(e.target) && 
+                !typingBox.contains(e.target)) {
+                echocardsContent.classList.remove('open');
+                echocardsDropdown.classList.remove('dropdown-active');
+            }
+        });
     </script>
 </body>
 </html>
